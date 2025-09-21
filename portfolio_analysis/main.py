@@ -282,8 +282,13 @@ Examples:
     )
 
     parser.add_argument(
+        '--interactive', action='store_true',
+        help='Run in interactive mode'
+    )
+
+    parser.add_argument(
         '--skip-gemini', action='store_true',
-        help='Skip Gemini CLI analysis even if available'
+        help='Skip Gemini analysis even if Gemini CLI is available'
     )
 
     parser.add_argument(
@@ -318,31 +323,8 @@ def check_gemini_cli():
         pass
     return None
 
-def run_gemini_analysis(input_directories, output_path, prompt_file=None, model='gemini-2.5-flash'):
+def run_gemini_analysis(input_directories, output_path, prompt_file=None, model='gemini-2.5-flash', interactive=False):
     """Run Gemini CLI analysis with portfolio data"""
-    # Load prompt from file if specified
-    if prompt_file and Path(prompt_file).exists():
-        with open(prompt_file, 'r', encoding='utf-8') as f:
-            prompt = f.read()
-    else:
-        prompt = """You are a professional investment advisor and portfolio analyst. Please analyze the provided portfolio data and reports comprehensively from {input_directories}. Your analysis should include:
-
-1. **Portfolio Composition Assessment**: Evaluate the current asset allocation, diversification level, and concentration risks
-2. **Risk Analysis**: Assess portfolio volatility, sector concentration, geographic exposure, and correlation risks
-3. **Performance Evaluation**: Review historical performance metrics, risk-adjusted returns, and benchmark comparisons
-4. **Optimization Recommendations**: Suggest improvements for asset allocation, rebalancing strategies, and risk management
-5. **Market Context**: Consider current market conditions and economic environment in your recommendations
-6. **Investment Strategy**: Provide actionable investment advice based on the portfolio analysis
-
-Please provide a detailed, professional report with specific recommendations for portfolio optimization and risk management. Format your response in markdown with clear sections and bullet points for easy readability."""
-
-    prompt = prompt.replace("{input_directories}", input_directories)
-    # save prompt to temp file
-    temp_prompt_file_path = Path("temp_prompt.txt")
-    temp_prompt_file = str(temp_prompt_file_path.resolve())
-    with open(temp_prompt_file, 'w', encoding='utf-8') as f:
-        f.write(prompt)
-
     gemini_cmd = check_gemini_cli()
 
     if not gemini_cmd:
@@ -350,22 +332,53 @@ Please provide a detailed, professional report with specific recommendations for
         logger.error("Please ensure Gemini CLI is properly installed and accessible.")
         return False
 
+    # fix cp950 error
+    env = os.environ.copy()
+    env['PYTHONIOENCODING'] = 'utf-8'
+    env['LC_ALL'] = 'en_US.UTF-8'
+
     # Implement Gemini CLI execution
     try:
+        if interactive:
+            gemini_args = [
+                gemini_cmd,
+                "--include-directories", input_directories,
+                "--model", model,
+            ]
+            logger.info(f"Running Gemini CLI with command: {' '.join(gemini_args)}")
+            subprocess.run(
+                gemini_args,
+                env=env,
+                stdin=None,
+                stdout=None,
+                stderr=None
+            )
+            return True
+
+        # Non-interactive mode
+        # Load prompt from file if specified
+        if prompt_file and Path(prompt_file).exists():
+            with open(prompt_file, 'r', encoding='utf-8') as f:
+                prompt = f.read()
+        else:
+            prompt = """You are a professional investment advisor and portfolio analyst. Please analyze the provided portfolio data and reports comprehensively from {input_directories}. Please provide a detailed, professional report with specific recommendations for portfolio optimization and risk management. Format your response in markdown with clear sections and bullet points for easy readability."""
+
+        prompt = prompt.replace("{input_directories}", input_directories)
+        # save prompt to temp file
+        temp_prompt_file_path = Path("temp_prompt.txt")
+        temp_prompt_file = str(temp_prompt_file_path.resolve())
+        with open(temp_prompt_file, 'w', encoding='utf-8') as f:
+            f.write(prompt)
+
         gemini_args = [
             gemini_cmd,
             temp_prompt_file,
             "--include-directories", input_directories,
             "--model", model
         ]
-
         logger.info(f"Running Gemini CLI with command: {' '.join(gemini_args)}")
         logger.info(f"Using model: {model}")
 
-        # fix cp950 error
-        env = os.environ.copy()
-        env['PYTHONIOENCODING'] = 'utf-8'
-        env['LC_ALL'] = 'en_US.UTF-8'
         result = subprocess.run(
             gemini_args,
             capture_output=True,
@@ -450,11 +463,9 @@ def main():
     if args.skip_gemini:
         logger.info("Skipping Gemini analysis as per user request.")
         sys.exit(0)
-
-    gemini_success = run_gemini_analysis(str(source_file.parent)+","+str(base_report_dir), str(summary_report_path), args.prompt_file, args.model)
+    gemini_success = run_gemini_analysis(str(source_file.parent)+","+str(base_report_dir), str(summary_report_path), args.prompt_file, args.model, args.interactive)
     if gemini_success:
         logger.info(f"Summary report generated at: {summary_report_path}")
-        sys.exit(0)
     else:
         logger.warning("Gemini analysis was not completed.")
         sys.exit(1)
