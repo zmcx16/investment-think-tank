@@ -9,7 +9,7 @@ def quant(x, places=2):
 
 def main():
     # Use a path relative to this script's location so the script is portable across machines
-    base = (Path(__file__).resolve().parent.parent / "portfolio" / "data" / "interactivebrokers" / "sample.anonymized.xml").resolve()
+    base = (Path(__file__).resolve().parent / "source" / "sample.anonymized.xml").resolve()
     tree = ET.parse(base)
     root = tree.getroot()
 
