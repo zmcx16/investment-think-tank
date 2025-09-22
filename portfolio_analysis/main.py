@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 # Setup logging configuration
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format='%(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.FileHandler('portfolio_analysis.log', encoding='utf-8')
@@ -87,14 +87,14 @@ def analyze_portfolio(df, equity_df, cash_value):
 
     return total_value
 
-def monte_carlo_optimization(equity_df, n_simulations=1000):
+def monte_carlo_optimization(equity_df, n_simulations=5000):
     """Perform Monte Carlo portfolio optimization"""
     # Get unique stock symbols
     tickers = equity_df["symbol"].unique().tolist()
 
     if len(tickers) < 2:
         logger.warning("At least 2 stocks are required for portfolio optimization")
-        return None
+        return None, None
 
     logger.info(f"\n=== Starting Monte Carlo Portfolio Optimization (Analyzing {len(tickers)} stocks) ===")
 
@@ -105,7 +105,7 @@ def monte_carlo_optimization(equity_df, n_simulations=1000):
 
         if hist_data.empty:
             logger.warning("Unable to download historical data")
-            return None
+            return None, None
 
         logger.info(f"Download successful, data shape: {hist_data.shape}")
         logger.info(f"Data columns: {hist_data.columns.tolist()}")
@@ -132,7 +132,7 @@ def monte_carlo_optimization(equity_df, n_simulations=1000):
 
         if returns.empty:
             logger.warning("Unable to obtain sufficient historical data")
-            return None
+            return None, None
 
         # Monte Carlo simulation
         n_assets = len(tickers)
@@ -181,13 +181,13 @@ def monte_carlo_optimization(equity_df, n_simulations=1000):
         for _, row in optimal_weights.iterrows():
             logger.info(f"{row['Ticker']}: {row['Weight']*100:.2f}%")
 
-        return optimal_weights
+        return optimal_weights, best_portfolio
 
     except Exception as e:
         logger.error(f"Monte Carlo optimization failed: {str(e)}")
-        return None
+        return None, None
 
-def generate_base_report(df, equity_df, cash_value, optimal_weights=None, output_dir=None):
+def generate_base_report(df, equity_df, cash_value, optimal_weights=None, best_portfolio=None, output_dir=None):
     """Generate comprehensive portfolio report"""
     total_value = df["marketValue"].sum() + cash_value
 
@@ -239,10 +239,22 @@ def generate_base_report(df, equity_df, cash_value, optimal_weights=None, output
     if optimal_weights is not None:
         optimal_weights.to_csv(optimal_weights_file, index=False)
 
+    # Save portfolio metrics to file
+    if best_portfolio is not None:
+        metrics_file = output_path / "portfolio_metrics.csv" if output_dir else "portfolio_metrics.csv"
+        metrics_data = pd.DataFrame({
+            'Metric': ['Expected Annual Return', 'Annual Volatility', 'Sharpe Ratio'],
+            'Value': [best_portfolio['return'], best_portfolio['volatility'], best_portfolio['sharpe']],
+            'Formatted_Value': [f"{best_portfolio['return']:.2%}", f"{best_portfolio['volatility']:.2%}", f"{best_portfolio['sharpe']:.3f}"]
+        })
+        metrics_data.to_csv(metrics_file, index=False, encoding='utf-8-sig')
+
     logger.info(f"\n=== Reports Generated ===")
     logger.info(f"1. {portfolio_report_file} - Complete portfolio analysis")
     if optimal_weights is not None:
         logger.info(f"2. {optimal_weights_file} - Optimal portfolio allocation")
+    if best_portfolio is not None:
+        logger.info(f"3. {metrics_file} - Portfolio optimization metrics")
 
 def parse_arguments():
     """Parse command line arguments"""
@@ -279,6 +291,13 @@ Examples:
         type=str,
         default=str(default_output),
         help=f'Output directory for generated reports (default: {default_output})'
+    )
+
+    parser.add_argument(
+        '--lang', '-l',
+        type=str,
+        default="en-US",
+        help=f'Language for Gemini analysis (default: en-US)'
     )
 
     parser.add_argument(
@@ -323,7 +342,7 @@ def check_gemini_cli():
         pass
     return None
 
-def run_gemini_analysis(input_directories, output_path, prompt_file=None, model='gemini-2.5-flash', interactive=False):
+def run_gemini_analysis(input_directories, output_path, prompt_file=None, model='gemini-2.5-flash', interactive=False, lang_code='en-US'):
     """Run Gemini CLI analysis with portfolio data"""
     gemini_cmd = check_gemini_cli()
 
@@ -364,6 +383,7 @@ def run_gemini_analysis(input_directories, output_path, prompt_file=None, model=
             prompt = """You are a professional investment advisor and portfolio analyst. Please analyze the provided portfolio data and reports comprehensively from {input_directories}. Please provide a detailed, professional report with specific recommendations for portfolio optimization and risk management. Format your response in markdown with clear sections and bullet points for easy readability."""
 
         prompt = prompt.replace("{input_directories}", input_directories)
+        prompt = prompt.replace("{lang_code}", lang_code)
         # save prompt to temp file
         temp_prompt_file_path = Path("temp_prompt.txt")
         temp_prompt_file = str(temp_prompt_file_path.resolve())
@@ -396,30 +416,30 @@ def run_gemini_analysis(input_directories, output_path, prompt_file=None, model=
         if result.returncode == 0:
             logger.info("Gemini analysis completed successfully.")
             if result.stdout:
-                logger.info("Gemini Output:")
-                logger.info(result.stdout)
+                print("Gemini Output:")
+                print(result.stdout)
 
             try:
                 with open(output_path, 'w', encoding='utf-8') as f:
                     f.write("# Gemini Portfolio Analysis Report\n\n")
                     f.write(result.stdout)
-                logger.info(f"Analysis saved to: {output_path}")
+                print(f"Analysis saved to: {output_path}")
             except Exception as write_error:
-                logger.warning(f"Could not save to file: {write_error}")
+                print(f"Could not save to file: {write_error}")
 
             return True
         else:
-            logger.error("Gemini analysis failed.")
+            print("Gemini analysis failed.")
             if result.stderr:
-                logger.error("Error Output:")
-                logger.error(result.stderr)
+                print("Error Output:")
+                print(result.stderr)
             return False
 
     except subprocess.TimeoutExpired:
-        logger.error("Gemini CLI analysis timed out (5 minutes)")
+        print("Gemini CLI analysis timed out (5 minutes)")
         return False
     except Exception as e:
-        logger.error(f"Error running Gemini CLI: {str(e)}")
+        print(f"Error running Gemini CLI: {str(e)}")
         return False
 
 def main():
@@ -432,42 +452,43 @@ def main():
     base_report_dir = output_dir / "base_report"
     summary_report_path = output_dir / "summary_report.md"
 
-    logger.info(f"Source file: {source_file}")
-    logger.info(f"Output directory: {output_dir}")
-    logger.info(f"Model: {args.model}")
+    print(f"Source file: {source_file}")
+    print(f"Output directory: {output_dir}")
+    print(f"Model: {args.model}")
 
     if not source_file.exists():
-        logger.error(f"Source file not found: {source_file}")
-        logger.error("Please ensure the file exists or specify a valid path using --source")
+        print(f"Source file not found: {source_file}")
+        print("Please ensure the file exists or specify a valid path using --source")
         sys.exit(1)
 
     try:
         # Parse XML
-        logger.info("Parsing portfolio data...")
+        print("Parsing portfolio data...")
         df, equity_df, cash_value = parse_ib_xml(str(source_file))
 
         # Analyze current portfolio
         total_value = analyze_portfolio(df, equity_df, cash_value)
 
         # Perform Monte Carlo optimization
-        optimal_weights = monte_carlo_optimization(equity_df)
+        optimal_weights, best_portfolio = monte_carlo_optimization(equity_df)
 
         # Generate reports
-        generate_base_report(df, equity_df, cash_value, optimal_weights, str(base_report_dir))
+        generate_base_report(df, equity_df, cash_value, optimal_weights, best_portfolio, str(base_report_dir))
 
     except Exception as e:
-        logger.error(f"Error occurred during analysis: {str(e)}")
+        print(f"Error occurred during analysis: {str(e)}")
         sys.exit(1)
 
     # Run Gemini CLI if available
     if args.skip_gemini:
-        logger.info("Skipping Gemini analysis as per user request.")
+        print("Skipping Gemini analysis as per user request.")
         sys.exit(0)
-    gemini_success = run_gemini_analysis(str(source_file.parent)+","+str(base_report_dir), str(summary_report_path), args.prompt_file, args.model, args.interactive)
+    gemini_success = run_gemini_analysis(str(source_file.parent)+","+str(base_report_dir), str(summary_report_path),
+                                         args.prompt_file, args.model, args.interactive, args.lang)
     if gemini_success:
-        logger.info(f"Summary report generated at: {summary_report_path}")
+        print(f"Summary report generated at: {summary_report_path}")
     else:
-        logger.warning("Gemini analysis was not completed.")
+        print("Gemini analysis was not completed.")
         sys.exit(1)
 
 if __name__ == "__main__":

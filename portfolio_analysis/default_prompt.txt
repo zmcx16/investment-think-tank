@@ -7,4 +7,4 @@ You are a professional investment advisor and portfolio analyst. Please analyze 
 5. **Market Context**: Consider current market conditions and economic environment in your recommendations
 6. **Investment Strategy**: Provide actionable investment advice based on the portfolio analysis
 
-Please provide a detailed, professional report with specific recommendations for portfolio optimization and risk management. Format your response in markdown with clear sections and bullet points for easy readability.
+Please write the entire report base on Language Codes: {lang_code}, provide a detailed, professional report with specific recommendations for portfolio optimization and risk management. Format your response in markdown with clear sections and bullet points for easy readability.
