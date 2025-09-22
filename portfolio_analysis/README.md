@@ -160,7 +160,7 @@ python main.py --prompt-file "custom_prompt.txt"
 
 ### AI Analysis Sample
 
-#### Non-interactive
+#### Non-interactive Mode
 ```markdown
 # Gemini Portfolio Analysis Report
 
@@ -301,9 +301,9 @@ Based on the analysis, the overarching investment strategy should focus on:
 This report provides a framework for optimizing the portfolio. It is recommended to review these recommendations with a financial advisor to tailor them to individual financial goals, risk tolerance, and time horizon.
 ```
 
-#### Interactive
+#### Interactive Mode
 
-Task1: Please generate an asset allocation analysis report based on the portfolio *.xml files and the base_report data
+##### Task1:
 ```markdown
 
 ╭───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -454,6 +454,54 @@ Task1: Please generate an asset allocation analysis report based on the portfoli
   understanding.
 ```
 
-Task2: Reallocate all cash holdings into QQQ, update the portfolio *.xml files accordingly, run portfolio_analysis, and re-evaluate whether the revised portfolio outperforms the previous asset allocation
+##### Task2:
 ```markdown
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  > Reallocate all cash holdings into QQQ, update portfolio_data.json accordingly, run portfolio_analysis main.py, and re-evaluate whether the revised portfolio outperforms the previous asset allocation  │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+ ╭──────────────────────────────────────────────╮
+ │ ✓  ReadFile data\source\portfolio_data.json  │
+ ╰──────────────────────────────────────────────╯
+ ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ ✓  WriteFile Writing to data\source\portfolio_data.json         
+
+ ...
+
+ │    ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════  │
+ │    1967 +   "cash_value": 0.0                                                                                                                                                                       │
+ │    1968   }                                                                                                                                                                                         │
+ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ ✓  Shell python main.py (Run the main portfolio analysis script to regenerate reports with the updated portfolio data.)                                                                             │
+ │                                                                                                                                                                                                     │
+ │    ... first 212 lines hidden ...                                                                                                                                                                   │
+
+...
+
+ │    Summary report generated at: C:\zmcx16\work\investment-think-tank\portfolio_analysis\output\summary_report.md                                                                                    │
+ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+✦ The portfolio analysis script has been run with the updated portfolio_data.json.
+
+  Here's a comparison of the portfolio metrics before and after reallocating cash to QQQ:
+
+
+  Previous Portfolio Metrics:
+     Expected Annual Return:* 14.83%
+     Annual Volatility:* 29.97%
+     Sharpe Ratio:* 0.495
+
+
+  Revised Portfolio Metrics (with cash in QQQ):
+     Expected Annual Return:* 17.91%
+     Annual Volatility:* 29.52%
+     Sharpe Ratio:* 0.607
+
+  Conclusion:
+
+  The revised portfolio, with cash holdings reallocated to QQQ, outperforms the previous asset allocation in terms of both expected return and risk-adjusted return.
+
+
+   * The Expected Annual Return increased from 14.83% to 17.91%.
+  This suggests that investing the cash into QQQ has improved the overall efficiency of the portfolio.
 ```

@@ -1,2 +1,2 @@
-1. 麻煩根據portfolio *.xml以及base_report data, 提供資產配置分析報告
-2. 將現金部位全數投入QQQ並update portfolio *.xml, 運行portfolio_analysis並重新評估投資組合是否優於之前的資產配置
+1. 麻煩根據剛剛portfolio_analysis main.py執行後產生的portfolio_data.json以及base_report data, 提供資產配置分析報告
+2. 將現金部位全數投入QQQ並update portfolio_data.json, 運行portfolio_analysis main.py並重新評估投資組合是否優於之前的資產配置
