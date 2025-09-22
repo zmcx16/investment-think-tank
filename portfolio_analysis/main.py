@@ -11,6 +11,8 @@ import shutil
 import os
 import logging
 
+from portfolio_analysis.data.interactivebrokers.convert_flex_query_reports import load_portfolio_data_from_json
+
 warnings.filterwarnings('ignore')
 
 # Setup logging configuration
@@ -24,40 +26,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def parse_ib_xml(xml_file: str):
-    """Parse Interactive Brokers Flex XML file and extract portfolio positions"""
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Extract positions from OpenPosition elements
-    positions = []
-    for pos in root.findall(".//OpenPosition"):
-        positions.append(pos.attrib)
-
-    if not positions:
-        raise ValueError("No positions found in XML file")
-
-    df = pd.DataFrame(positions)
-
-    # Convert numeric columns
-    numeric_cols = ["position", "markPrice", "costBasisPrice", "positionValue", "percentOfNAV"]
-    for col in numeric_cols:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-    # Calculate market value from positionValue (already calculated in IB XML)
-    df["marketValue"] = df["positionValue"]
-
-    # Filter out options and focus on stocks/ETFs for portfolio optimization
-    equity_df = df[df["assetCategory"].isin(["STK", "ADR", "REIT"])].copy()
-
-    # Get cash from EquitySummary
-    cash_value = 0
-    for summary in root.findall(".//EquitySummaryByReportDateInBase"):
-        cash_value = float(summary.get("cash", 0))
-        break
-
-    return df, equity_df, cash_value
 
 def analyze_portfolio(df, equity_df, cash_value):
     """Analyze portfolio composition and risk metrics"""
@@ -265,14 +233,14 @@ def parse_arguments():
         epilog="""
 Examples:
   python main.py
-  python main.py --source /path/to/portfolio.xml
+  python main.py --source /path/to/portfolio_data.json
   python main.py --output /path/to/output
-  python main.py --source /path/to/portfolio.xml --output /path/to/output --prompt-file /path/to/custom_prompt.txt --model gemini-2.5-flash
+  python main.py --source /path/to/portfolio_data.json --output /path/to/output --prompt-file /path/to/custom_prompt.txt --model gemini-2.5-flash
         """
     )
 
     # Default source path (same as current)
-    default_source = Path(__file__).parent / "data" / "interactivebrokers" / "source" / "sample.anonymized.xml"
+    default_source = Path(__file__).parent / "data" / "interactivebrokers" / "source" / "portfolio_data.json"
 
     # Default output path (output folder relative to main.py)
     default_output = Path(__file__).parent / "output"
@@ -462,9 +430,11 @@ def main():
         sys.exit(1)
 
     try:
-        # Parse XML
         print("Parsing portfolio data...")
-        df, equity_df, cash_value = parse_ib_xml(str(source_file))
+        df, equity_df, cash_value = load_portfolio_data_from_json(source_file)
+        print(f"cash_value: {cash_value}")
+        print(f"df shape: {df.shape}")
+        print(f"equity_df shape: {equity_df.shape}")
 
         # Analyze current portfolio
         total_value = analyze_portfolio(df, equity_df, cash_value)
