@@ -35,7 +35,7 @@ A comprehensive portfolio analysis tool that integrates with Interactive Brokers
 python main.py
 
 # Custom source and output
-python main.py --source "path/to/portfolio.xml" --output "path/to/results"
+python main.py --source "path/to/portfolio_data.json" --output "path/to/results"
 
 # Skip AI analysis (faster)
 python main.py --skip-gemini
@@ -74,8 +74,8 @@ output/
    - Log into Interactive Brokers Client Portal
    - Navigate to Reports > Flex Queries
    - Create new query with these sections:
+     - Net Asset Value (NAV) in Base
      - Open Positions
-     - Equity Summary
 
 2. **Download Data**:
    - Run the query to generate XML report
@@ -98,7 +98,7 @@ output/
 
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
-| `--source` | `-s` | Portfolio data file path | `data/interactivebrokers/source/sample.anonymized.xml` |
+| `--source` | `-s` | Portfolio data file path | `data/interactivebrokers/source/portfolio_data.json` |
 | `--output` | `-o` | Output directory | `output` |
 | `--prompt-file` | `-p` | Custom AI prompt file | `default_prompt.txt` |
 | `--model` | `-m` | Gemini model to use | `gemini-2.5-flash` |
