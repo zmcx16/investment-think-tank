@@ -824,14 +824,14 @@
       "putCall": "P",
       "principalAdjustFactor": "",
       "reportDate": "20250919",
-      "position": -7,
+      "position": -35,
       "markPrice": 0.0866,
-      "positionValue": -60.62,
+      "positionValue": -303.1,
       "openPrice": "0.7429656",
       "costBasisPrice": 0.7429656,
-      "costBasisMoney": "520.08",
-      "percentOfNAV": 0.61,
-      "fifoPnlUnrealized": "-580.70",
+      "costBasisMoney": "2600.38",
+      "percentOfNAV": 3.03,
+      "fifoPnlUnrealized": "-2903.48",
       "side": "Short",
       "levelOfDetail": "SUMMARY",
       "openDateTime": "",
@@ -846,7 +846,7 @@
       "commodityType": "",
       "fineness": "0.0",
       "weight": "0.0",
-      "marketValue": -60.62
+      "marketValue": -303.1
     },
     {
       "accountId": "ANON_ACCOUNT_1",
@@ -877,14 +877,14 @@
       "putCall": "P",
       "principalAdjustFactor": "",
       "reportDate": "20250919",
-      "position": -1,
+      "position": -3,
       "markPrice": 0.925,
-      "positionValue": -92.5,
+      "positionValue": -277.5,
       "openPrice": "0.4629656",
       "costBasisPrice": 0.4629656,
-      "costBasisMoney": "46.30",
-      "percentOfNAV": 0.92,
-      "fifoPnlUnrealized": "-138.80",
+      "costBasisMoney": "138.89",
+      "percentOfNAV": 2.78,
+      "fifoPnlUnrealized": "-416.39",
       "side": "Short",
       "levelOfDetail": "SUMMARY",
       "openDateTime": "",
@@ -899,7 +899,7 @@
       "commodityType": "",
       "fineness": "0.0",
       "weight": "0.0",
-      "marketValue": -92.5
+      "marketValue": -277.5
     },
     {
       "accountId": "ANON_ACCOUNT_1",
@@ -930,14 +930,14 @@
       "putCall": "P",
       "principalAdjustFactor": "",
       "reportDate": "20250919",
-      "position": -1,
+      "position": -5,
       "markPrice": 0.65,
-      "positionValue": -65.0,
+      "positionValue": -325.0,
       "openPrice": "0.2434656",
       "costBasisPrice": 0.2434656,
-      "costBasisMoney": "24.35",
-      "percentOfNAV": 0.65,
-      "fifoPnlUnrealized": "-89.35",
+      "costBasisMoney": "121.73",
+      "percentOfNAV": 3.25,
+      "fifoPnlUnrealized": "-446.73",
       "side": "Short",
       "levelOfDetail": "SUMMARY",
       "openDateTime": "",
@@ -952,7 +952,7 @@
       "commodityType": "",
       "fineness": "0.0",
       "weight": "0.0",
-      "marketValue": -65.0
+      "marketValue": -325.0
     },
     {
       "accountId": "ANON_ACCOUNT_1",
@@ -983,14 +983,14 @@
       "putCall": "P",
       "principalAdjustFactor": "",
       "reportDate": "20250919",
-      "position": -1,
+      "position": -8,
       "markPrice": 0.4,
-      "positionValue": -40.0,
+      "positionValue": -320.0,
       "openPrice": "0.3544656",
       "costBasisPrice": 0.3544656,
-      "costBasisMoney": "35.45",
-      "percentOfNAV": 0.4,
-      "fifoPnlUnrealized": "-75.45",
+      "costBasisMoney": "283.57",
+      "percentOfNAV": 3.2,
+      "fifoPnlUnrealized": "-603.57",
       "side": "Short",
       "levelOfDetail": "SUMMARY",
       "openDateTime": "",
@@ -1005,7 +1005,7 @@
       "commodityType": "",
       "fineness": "0.0",
       "weight": "0.0",
-      "marketValue": -40.0
+      "marketValue": -320.0
     },
     {
       "accountId": "ANON_ACCOUNT_1",
@@ -1036,14 +1036,14 @@
       "putCall": "P",
       "principalAdjustFactor": "",
       "reportDate": "20250919",
-      "position": -11,
+      "position": -58,
       "markPrice": 0.052,
-      "positionValue": -57.2,
+      "positionValue": -301.6,
       "openPrice": "0.1457576",
       "costBasisPrice": 0.1457576,
-      "costBasisMoney": "160.33",
-      "percentOfNAV": 0.57,
-      "fifoPnlUnrealized": "-217.53",
+      "costBasisMoney": "845.39",
+      "percentOfNAV": 3.02,
+      "fifoPnlUnrealized": "-1146.99",
       "side": "Short",
       "levelOfDetail": "SUMMARY",
       "openDateTime": "",
@@ -1058,7 +1058,7 @@
       "commodityType": "",
       "fineness": "0.0",
       "weight": "0.0",
-      "marketValue": -57.2
+      "marketValue": -301.6
     }
   ],
   "equity_df": [
@@ -1858,5 +1858,5 @@
       "marketValue": 563.16
     }
   ],
-  "cash_value": 3085.29
+  "cash_value": 2984.12
 }

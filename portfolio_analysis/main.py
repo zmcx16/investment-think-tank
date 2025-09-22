@@ -1,4 +1,3 @@
-import xml.etree.ElementTree as ET
 import pandas as pd
 import numpy as np
 import yfinance as yf
@@ -11,7 +10,7 @@ import shutil
 import os
 import logging
 
-from portfolio_analysis.data.interactivebrokers.convert_flex_query_reports import load_portfolio_data_from_json
+from data.interactivebrokers.convert_flex_query_reports import load_portfolio_data_from_json
 
 warnings.filterwarnings('ignore')
 

@@ -78,10 +78,20 @@ output/
 
 2. **Download Data**:
    - Run the query to generate XML report
-   - Download and save as `.xml` file
+   - Download and save as `sample.anonymized.xml` manually or run the provided script:
+   ```bash
+   python download_flex_query_reports.py
+   ```
 
-3. **Sample Data**:
-   - Use `data/interactivebrokers/source/sample.anonymized.xml` for testing
+3. **Convert to JSON**:
+   - Use provided script to convert XML to JSON format
+   ```bash
+   python convert_flex_query_reports.py
+   ```
+   
+4. **Place JSON File**:
+   - Save the converted JSON file in `data/interactivebrokers/source/portfolio_data.json`
+
 
 ## Command Line Options
 
@@ -295,6 +305,153 @@ This report provides a framework for optimizing the portfolio. It is recommended
 
 Task1: Please generate an asset allocation analysis report based on the portfolio *.xml files and the base_report data
 ```markdown
+
+╭───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  > Please analyze the portfolio_data.json (produced earlier by portfolio_analysis main.py) together with the base_report data, and generate a detailed asset allocation analysis report.  │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+ ╭────────────────────────────────────────────────────────╮
+ │ ✓  ReadFile data\source\portfolio_data.json            │
+ │                                                        │
+ │ ✓  ReadFile ...output\\optimal_portfolio_weights.csv   │
+ │                                                        │
+ │ ✓  ReadFile ...output\\portfolio_analysis_report.csv   │
+ │                                                        │
+ │ ✓  ReadFile ...tput\base_report\portfolio_metrics.csv  │
+ ╰────────────────────────────────────────────────────────╯
+✦ Asset Allocation Analysis Report
+
+  Date: 2025年9月22日
+
+  ---
+
+  ### 1. Executive Summary
+
+
+  This report provides a detailed analysis of the current portfolio's asset allocation, comparing it against an optimized allocation strategy. The portfolio currently holds a mix of stocks (STK), Exchange
+  Traded Funds (ETF), Options (OPT), and Cash. The analysis highlights current holdings, their market values, and their percentage allocation within the portfolio, alongside key performance indicators.
+
+  ---
+
+  ### 2. Portfolio Overview
+
+
+  Total Portfolio Value (excluding options):
+  Based on portfolio_analysis_report.csv, the total market value of stocks, ETFs, and cash is approximately $9,999.98.
+
+  Overall Portfolio Performance Metrics:
+
+
+  | Metric                  | Value   |
+  | :---------------------- | :------ |
+  | Expected Annual Return  | 14.11%  |
+  | Annual Volatility       | 27.31%  |
+  | Sharpe Ratio            | 0.517   |
+
+  ---
+
+  ### 3. Current Asset Allocation
+
+  The current portfolio is allocated across various assets as follows:
+
+  Holdings by Asset Category:
+
+
+  | Asset Category | Total Market Value (USD) | Percentage of Portfolio |
+  | :------------- | :----------------------- | :---------------------- |
+  | STK            | 6,817.62                 | 68.18%                  |
+  | ETF            | 2,996.75                 | 29.97%                  |
+  | CASH           | 88.54                    | 0.89%                   |
+  | OPT            | -315.32                  | -3.15%                  |
+  | Total      | 9,587.59             | 95.89%              |
+
+
+  Note: The total market value includes options, which have a negative value in this report, leading to a total percentage less than 100% if only positive assets are considered. The `percentOfNAV` in 
+  `portfolio_data.json` sums to approximately 95.89% for all assets including options.
+
+  Detailed Current Holdings:
+
+
+  | Symbol | Description                 | Asset Category | Market Value (USD) | Current Weight (%) | Unrealized PnL (USD) | Issuer Country |
+  | :----- | :-------------------------- | :------------- | :----------------- | :----------------- | :------------------- | :------------- |
+  | QQQ    | Invesco QQQ Trust           | ETF            | 2996.75            | 29.97              | 0.00                 | US             |
+  | PVH    | PVH CORP                    | STK            | 605.71             | 6.06               | -4.15                | US             |
+  | EW     | EDWARDS LIFESCIENCES CORP   | STK            | 595.28             | 5.95               | -46.72               | US             |
+  | AAP    | ADVANCE AUTO PARTS INC      | STK            | 587.00             | 5.87               | -326.52              | US             |
+  | SEE    | SEALED AIR CORP             | STK            | 579.70             | 5.80               | -3.78                | US             |
+  | ALB    | ALBEMARLE CORP              | STK            | 572.88             | 5.73               | -641.29              | US             |
+  | NKE    | NIKE INC -CL B              | STK            | 567.12             | 5.67               | -22.56               | US             |
+  | GGB    | GERDAU SA -SPON ADR         | STK            | 566.02             | 5.66               | 38.21                | BR             |
+  | VALE   | VALE SA-SP ADR              | STK            | 564.72             | 5.65               | -70.82               | BR             |
+  | VFC    | VF CORP                     | STK            | 563.16             | 5.63               | -169.84              | US             |
+  | HAL    | HALLIBURTON CO              | STK            | 562.75             | 5.63               | -110.69              | US             |
+  | NVO    | NOVO-NORDISK A/S-SPONS ADR  | STK            | 552.60             | 5.53               | -117.68              | DK             |
+  | PYPL   | PAYPAL HOLDINGS INC         | STK            | 545.76             | 5.46               | 1.54                 | US             |
+  | TGT    | TARGET CORP                 | STK            | 528.78             | 5.29               | -115.00              | US             |
+  | EL     | ESTEE LAUDER COMPANIES-CL A | STK            | 526.80             | 5.27               | -331.36              | US             |
+  | EPAM   | EPAM SYSTEMS INC            | STK            | 624.80             | 6.25               | -369.72              | US             |
+  | CASH   | Cash Position               | CASH           | 88.54              | 0.89               | 0.00                 | N/A            |
+  | ABNB   | ABNB 26SEP25 117 P          | OPT            | -60.62             | 0.61               | -580.70              | N/A            |
+  | G      | G 17OCT25 40 P              | OPT            | -65.00             | 0.65               | -89.35               | N/A            |
+  | DEO    | DEO 17OCT25 90 P            | OPT            | -92.50             | 0.92               | -138.80              | N/A            |
+  | ZIM    | ZIM 03OCT25 11.5 P          | OPT            | -57.20             | 0.57               | -217.53              | N/A            |
+  | GIS    | GIS 21NOV25 45 P            | OPT            | -40.00             | 0.40               | -75.45               | N/A            |
+
+  Geographical Allocation (based on Issuer Country Code for Stocks/ADRs):
+
+
+  | Country Code | Number of Holdings |
+  | :----------- | :----------------- |
+  | US           | 12                 |
+  | BR           | 2                  |
+  | DK           | 1                  |
+
+  ---
+
+  ### 4. Optimal Portfolio Weights
+
+  The optimal portfolio weights, as determined by the analysis, are as follows:
+
+
+  | Ticker | Optimal Weight |
+  | :----- | :------------- |
+  | SEE    | 13.22%         |
+  | AAP    | 11.88%         |
+  | ALB    | 11.29%         |
+  | EW     | 10.85%         |
+  | EL     | 9.56%          |
+  | VFC    | 8.12%          |
+  | PYPL   | 7.74%          |
+  | GGB    | 7.54%          |
+  | PVH    | 6.60%          |
+  | NVO    | 4.36%          |
+  | HAL    | 2.44%          |
+  | QQQ    | 2.11%          |
+  | NKE    | 1.34%          |
+  | VALE   | 1.27%          |
+  | TGT    | 1.00%          |
+  | EPAM   | 0.70%          |
+
+  ---
+
+  ### 5. Comparison and Analysis
+
+  Key Observations:
+
+
+   * QQQ (ETF): Currently, QQQ represents a significant portion of the portfolio (29.97%), while its optimal weight is considerably lower at 2.11%. This indicates a substantial overweighting in this ETF.
+  The current allocation deviates significantly from the optimal weights, particularly with the large allocation to QQQ and the underallocation to several individual stocks. This suggests that the
+  portfolio could benefit from rebalancing to align with the optimal strategy, which aims to maximize return for a given level of risk (as implied by the Sharpe Ratio).
+
+  ---
+
+  ### 6. Recommendations
+
+
+   1. Rebalance towards Optimal Weights: Consider reducing the position in QQQ and increasing allocations to individual stocks such as SEE, AAP, ALB, EW, EL, VFC, PYPL, GGB, and PVH to align with the optimal
+      portfolio weights.
+  This report provides a high-level overview of the asset allocation. A deeper dive into sector analysis, correlation between assets, and specific risk contributions would provide a more comprehensive
+  understanding.
 ```
 
 Task2: Reallocate all cash holdings into QQQ, update the portfolio *.xml files accordingly, run portfolio_analysis, and re-evaluate whether the revised portfolio outperforms the previous asset allocation
