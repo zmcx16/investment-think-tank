@@ -1,0 +1,2 @@
+1. Please provide an asset allocation analysis report using the existing portfolio *.xml files together with the data in the base_report folder.  
+2. Reallocate all cash holdings into QQQ, update the portfolio *.xml files accordingly, run portfolio_analysis, and re-evaluate whether the revised portfolio outperforms the previous asset allocation

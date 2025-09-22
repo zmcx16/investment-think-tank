@@ -230,9 +230,11 @@ def generate_base_report(df, equity_df, cash_value, optimal_weights=None, best_p
         output_path.mkdir(parents=True, exist_ok=True)
         portfolio_report_file = output_path / "portfolio_analysis_report.csv"
         optimal_weights_file = output_path / "optimal_portfolio_weights.csv"
+        metrics_file = output_path / "portfolio_metrics.csv"
     else:
         portfolio_report_file = "portfolio_analysis_report.csv"
         optimal_weights_file = "optimal_portfolio_weights.csv"
+        metrics_file = "portfolio_metrics.csv"
 
     report_df.to_csv(portfolio_report_file, index=False, encoding='utf-8-sig')
 
@@ -241,7 +243,6 @@ def generate_base_report(df, equity_df, cash_value, optimal_weights=None, best_p
 
     # Save portfolio metrics to file
     if best_portfolio is not None:
-        metrics_file = output_path / "portfolio_metrics.csv" if output_dir else "portfolio_metrics.csv"
         metrics_data = pd.DataFrame({
             'Metric': ['Expected Annual Return', 'Annual Volatility', 'Sharpe Ratio'],
             'Value': [best_portfolio['return'], best_portfolio['volatility'], best_portfolio['sharpe']],
@@ -294,10 +295,17 @@ Examples:
     )
 
     parser.add_argument(
+        '--model', '-m',
+        type=str,
+        default='gemini-2.5-flash',
+        help='Gemini model to use for analysis (default: gemini-2.5-flash)'
+    )
+
+    parser.add_argument(
         '--lang', '-l',
         type=str,
         default="en-US",
-        help=f'Language for Gemini analysis (default: en-US)'
+        help=f'Language code for Gemini analysis report output (default: en-US)'
     )
 
     parser.add_argument(
@@ -315,13 +323,6 @@ Examples:
         type=str,
         default=str(default_prompt_file),
         help=f'Path to the prompt file for Gemini analysis (default: {default_prompt_file})'
-    )
-
-    parser.add_argument(
-        '--model', '-m',
-        type=str,
-        default='gemini-2.5-flash',
-        help='Gemini model to use for analysis (default: gemini-2.5-flash)'
     )
 
     return parser.parse_args()
@@ -361,7 +362,6 @@ def run_gemini_analysis(input_directories, output_path, prompt_file=None, model=
         if interactive:
             gemini_args = [
                 gemini_cmd,
-                "--include-directories", input_directories,
                 "--model", model,
             ]
             logger.info(f"Running Gemini CLI with command: {' '.join(gemini_args)}")

@@ -91,6 +91,7 @@ output/
 | `--output` | `-o` | Output directory | `output` |
 | `--prompt-file` | `-p` | Custom AI prompt file | `default_prompt.txt` |
 | `--model` | `-m` | Gemini model to use | `gemini-2.5-flash` |
+| `--lang` | `-l` | Language code for Gemini analysis report output | `en-US` |
 | `--skip-gemini` | | Skip AI analysis | False |
 | `--interactive` | `-i` | Enable interactive Q&A mode | False |
 
@@ -132,11 +133,6 @@ Usage:
 python main.py --prompt-file "custom_prompt.txt"
 ```
 
-### Supported Models
-- `gemini-2.5-flash` (default, fastest)
-- `gemini-1.5-pro` (more detailed analysis)
-- `gemini-1.5-pro-latest` (latest version)
-
 ## Sample Output
 
 ### Portfolio Analysis Report (CSV)
@@ -145,7 +141,16 @@ python main.py --prompt-file "custom_prompt.txt"
 | AAPL | Apple Inc | STK | 100 | 150.00 | 15000.00 | 25.5 |
 | GOOGL | Alphabet Inc | STK | 50 | 2500.00 | 125000.00 | 42.8 |
 
+### Portfolio Metrics (CSV)
+| Metric | Value | Formatted_Value |
+|--------|-------|-----------------|
+| Expected Annual Return | 0.15183865429839527 | 15.18% |
+| Annual Volatility | 0.28284701150019464 | 28.28% |
+| Sharpe Ratio | 0.5368225511489655 | 0.537 |
+
 ### AI Analysis Sample
+
+#### Non-interactive
 ```markdown
 # Gemini Portfolio Analysis Report
 
@@ -284,4 +289,14 @@ Based on the analysis, the overarching investment strategy should focus on:
 *   **Cash Deployment:** Strategically deploy the cash position into high-conviction investment opportunities that align with the optimal portfolio structure and current market outlook.
 
 This report provides a framework for optimizing the portfolio. It is recommended to review these recommendations with a financial advisor to tailor them to individual financial goals, risk tolerance, and time horizon.
+```
+
+#### Interactive
+
+Task1: Please generate an asset allocation analysis report based on the portfolio *.xml files and the base_report data
+```markdown
+```
+
+Task2: Reallocate all cash holdings into QQQ, update the portfolio *.xml files accordingly, run portfolio_analysis, and re-evaluate whether the revised portfolio outperforms the previous asset allocation
+```markdown
 ```
