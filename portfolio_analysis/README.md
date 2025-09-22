@@ -41,7 +41,7 @@ python main.py --source "path/to/portfolio_data.json" --output "path/to/results"
 python main.py --skip-gemini
 
 # Use different AI model
-python main.py --model "gemini-2.5-flash"
+python main.py --model "gemini-2.5-pro"
 
 # Custom prompt file for AI analysis
 python main.py --prompt-file "custom_prompt.txt"
@@ -50,7 +50,7 @@ python main.py --prompt-file "custom_prompt.txt"
 python main.py --simulations 10000
 
 # Combined options
-python main.py --source "data.json" --simulations 3000 --model "gemini-2.5-flash"
+python main.py --source "data.json" --simulations 3000 --model "gemini-2.5-pro"
 
 ```
 
@@ -107,7 +107,7 @@ output/
 | `--source` | `-s` | Portfolio data file path | `data/interactivebrokers/source/portfolio_data.json` |
 | `--output` | `-o` | Output directory | `output` |
 | `--prompt-file` | `-p` | Custom AI prompt file | `default_prompt.txt` |
-| `--model` | `-m` | Gemini model to use | `gemini-2.5-flash` |
+| `--model` | `-m` | Gemini model to use | `gemini-2.5-pro` |
 | `--lang` | `-l` | Language code for Gemini analysis report output | `en-US` |
 | `--simulations` | `-n` | Number of Monte Carlo simulations for portfolio optimization | `5000` |
 | `--skip-gemini` | | Skip AI analysis | False |

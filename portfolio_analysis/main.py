@@ -265,8 +265,8 @@ Examples:
     parser.add_argument(
         '--model', '-m',
         type=str,
-        default='gemini-2.5-flash',
-        help='Gemini model to use for analysis (default: gemini-2.5-flash)'
+        default='gemini-2.5-pro',
+        help='Gemini model to use for analysis (default: gemini-2.5-pro)'
     )
 
     parser.add_argument(
