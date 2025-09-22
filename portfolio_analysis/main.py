@@ -234,7 +234,8 @@ Examples:
   python main.py
   python main.py --source /path/to/portfolio_data.json
   python main.py --output /path/to/output
-  python main.py --source /path/to/portfolio_data.json --output /path/to/output --prompt-file /path/to/custom_prompt.txt --model gemini-2.5-flash
+  python main.py --simulations 10000
+  python main.py --source /path/to/portfolio_data.json --output /path/to/output --prompt-file /path/to/custom_prompt.txt --model gemini-2.5-flash --simulations 3000
         """
     )
 
@@ -290,6 +291,13 @@ Examples:
         type=str,
         default=str(default_prompt_file),
         help=f'Path to the prompt file for Gemini analysis (default: {default_prompt_file})'
+    )
+
+    parser.add_argument(
+        '--simulations', '-n',
+        type=int,
+        default=5000,
+        help='Number of Monte Carlo simulations for portfolio optimization (default: 5000)'
     )
 
     return parser.parse_args()
@@ -439,7 +447,7 @@ def main():
         total_value = analyze_portfolio(df, equity_df, cash_value)
 
         # Perform Monte Carlo optimization
-        optimal_weights, best_portfolio = monte_carlo_optimization(equity_df)
+        optimal_weights, best_portfolio = monte_carlo_optimization(equity_df, args.simulations)
 
         # Generate reports
         generate_base_report(df, equity_df, cash_value, optimal_weights, best_portfolio, str(base_report_dir))
