@@ -62,6 +62,7 @@ output/
 ├── summary_report.md           # AI-generated investment analysis
 └── base_report/
     ├── portfolio_analysis_report.csv    # Detailed position data
+    ├── portfolio_metrics.csv            # Monte Carlo metrics results 
     └── optimal_portfolio_weights.csv    # Monte Carlo optimization results
 ```
 
