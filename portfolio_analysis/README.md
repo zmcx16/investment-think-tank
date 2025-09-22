@@ -46,6 +46,12 @@ python main.py --model "gemini-2.5-flash"
 # Custom prompt file for AI analysis
 python main.py --prompt-file "custom_prompt.txt"
 
+# Adjust Monte Carlo simulations for faster/more accurate results
+python main.py --simulations 10000
+
+# Combined options
+python main.py --source "data.json" --simulations 3000 --model "gemini-2.5-flash"
+
 ```
 
 #### Option 2: Interactive Mode
@@ -103,6 +109,7 @@ output/
 | `--prompt-file` | `-p` | Custom AI prompt file | `default_prompt.txt` |
 | `--model` | `-m` | Gemini model to use | `gemini-2.5-flash` |
 | `--lang` | `-l` | Language code for Gemini analysis report output | `en-US` |
+| `--simulations` | `-n` | Number of Monte Carlo simulations for portfolio optimization | `5000` |
 | `--skip-gemini` | | Skip AI analysis | False |
 | `--interactive` | `-i` | Enable interactive Q&A mode | False |
 
@@ -121,6 +128,7 @@ output/
 - Risk-return optimization using Modern Portfolio Theory
 - Sharpe ratio maximization
 - Optimal weight recommendations
+- Configurable simulation count (default: 5000) for accuracy vs. performance trade-off
 
 ### 3. AI-Powered Insights
 - Professional investment advisory analysis
